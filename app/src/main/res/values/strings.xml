@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Camera2019</string>
+
+    <!-- Rationale -->
+    <string name="rationale_try">Try It</string>
+    <string name="rationale_no_thanks">No Thanks</string>
+    <string name="rationale_title">App Permission</string>
+    <string name="rationale_subtitle">App need this permission to work.</string>
+    <string name="snack_bar_permission"/>
+
+</resources>
