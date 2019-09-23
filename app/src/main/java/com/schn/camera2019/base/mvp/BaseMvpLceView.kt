@@ -2,6 +2,7 @@ package com.schn.camera2019.base.mvp
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import com.schn.camera2019.R
 
 abstract class BaseMvpLceView<CV : View, M, V : BaseContract.ListView<M>, P : BaseContract.Presenter<V>> :
@@ -15,7 +16,7 @@ abstract class BaseMvpLceView<CV : View, M, V : BaseContract.ListView<M>, P : Ba
     lateinit var mContentView: CV
 
     // holds the error view
-    lateinit var mErrorView: View
+    lateinit var mErrorView: TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,7 +31,7 @@ abstract class BaseMvpLceView<CV : View, M, V : BaseContract.ListView<M>, P : Ba
 
     // hide the loading view and show content view.
     override fun showContent() {
-        gone(mLoadingView)
+        gone(mLoadingView, mErrorView)
         visible(mContentView)
     }
 

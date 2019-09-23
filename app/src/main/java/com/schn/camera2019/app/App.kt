@@ -2,10 +2,8 @@ package com.schn.camera2019.app
 
 import android.app.Application
 import android.content.Context
+import com.schn.camera2019.util.LogUtils
 
-/**
- * Created by acer on 20-11-2018.
- */
 class App : Application() {
     companion object {
         lateinit var instance: App

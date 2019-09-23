@@ -3,6 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="match_parent"
+        android:background="@color/colorWhite"
         android:layout_height="match_parent">
     <FrameLayout
             android:id="@+id/contentView"
@@ -24,8 +25,9 @@
     <TextView
             android:id="@+id/errorView"
             android:layout_width="match_parent"
-            android:layout_gravity="bottom"
+            android:layout_gravity="center_vertical"
             android:gravity="center"
-            tools:text="Error Message"
+            android:textColor="@color/colorBlack"
+            tools:text="No videos found"
             android:layout_height="40dp"/>
 </FrameLayout>

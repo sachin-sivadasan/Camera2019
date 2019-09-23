@@ -56,7 +56,7 @@ abstract class BaseRecyclerFragment<CV : View, M : Any,
 
     override fun _onViewCreated(view: View, savedInstanceState: Bundle?) {
         mRecyclerView = view.findViewById(R.id.listView)
-        mRecyclerView.layoutManager = GridLayoutManager(view.context, 1)
+        mRecyclerView.layoutManager = GridLayoutManager(view.context, 2)
         mRecyclerView.adapter = mListAdapter
         initListView()
         Log.d("test_view", "loading data")

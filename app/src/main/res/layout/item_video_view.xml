@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                android:background="@drawable/border_black"
+                android:layout_height="wrap_content">
+    <com.schn.camera2019.widget.SquareImageView
+            android:id="@+id/thumbIv"
+            android:background="@color/colorLightBlue"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <TextView
+            android:id="@+id/nameTv"
+            android:layout_below="@id/thumbIv"
+            android:background="@color/colorWhite"
+            android:textColor="@color/colorBlack"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            tools:text="Test"
+            android:layout_height="40dp"/>
+</RelativeLayout>

@@ -24,6 +24,9 @@ abstract class BaseRecyclerViewAdapter<E> : RecyclerView.Adapter<BaseRecyclerVie
         return NO_ID
     }
 
+    fun add(item: E) {
+        mList.add(item)
+    }
     fun set(data: ArrayList<E>) {
         mList.clear()
         mList.addAll(data)

@@ -5,7 +5,18 @@
     <string name="rationale_try">Try It</string>
     <string name="rationale_no_thanks">No Thanks</string>
     <string name="rationale_title">App Permission</string>
-    <string name="rationale_subtitle">App need this permission to work.</string>
-    <string name="snack_bar_permission"/>
-
+    <string name="rationale_subtitle">App need all permission to work.</string>
+    <string name="need_all_permissions">App need all permission to work.</string>
+    <string name="snack_bar_permission">You can always change the permissions</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="record">Record</string>
+    <string name="resume">Resume</string>
+    <string name="stop">Stop</string>
+    <string name="intro_message">
+        <![CDATA[
+            A fast movement is detected while recording video. Please take video without any shake or fast movement.
+        ]]>
+    </string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="error_in_reading_files">Error In Reading File</string>
 </resources>

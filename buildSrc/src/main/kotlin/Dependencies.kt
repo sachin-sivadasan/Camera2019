@@ -70,6 +70,7 @@ object Rx1xDepts {
 
 object DesignDepts {
     var deps_cardview = "com.android.support:cardview-v7:${Versions.design_version}"
+    var deps_material = "com.google.android.material:material:1.0.0"
 }
 
 object ImageDepts {

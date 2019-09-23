@@ -49,7 +49,7 @@ abstract class BaseMvpFragment<V : BaseContract.View, P : BaseContract.Presenter
         container: android.view.ViewGroup?,
         savedInstanceState: android.os.Bundle?
     ): View {
-        val mRoot: View = inflater?.inflate(getLayoutId(), container, false)!!
+        val mRoot: View = inflater.inflate(getLayoutId(), container, false)!!
         initView(mRoot)
         return mRoot
     }

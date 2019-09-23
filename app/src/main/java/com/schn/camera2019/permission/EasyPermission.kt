@@ -16,7 +16,7 @@ object EasyPermission {
             if (permissionAction.shouldShowRequestPermissionRationale(action.getPermission())) {
                 LogUtils.d(TAG, "called showRationale for " + action.getPermission())
                 if (host is PermissionCallback) {
-                    host.permissionAccepted(action.getCode())
+                    host.showRationale(action.getCode())
                 }
             } else {
                 LogUtils.d(TAG, "called requestPermission for " + action.getPermission())
