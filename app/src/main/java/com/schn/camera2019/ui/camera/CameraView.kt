@@ -36,8 +36,10 @@ import com.schn.camera2019.base.dialog.BaseMvpDialogFragment
 import com.schn.camera2019.rx.Event
 import com.schn.camera2019.rx.RxBus
 import com.schn.camera2019.rx.rxSchedulerHelperForObservable
+import com.schn.camera2019.util.LogUtils
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.fragment_camera.*
 import java.io.File
 import java.io.IOException
 import java.lang.Long
@@ -61,7 +63,7 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
 
 
     private val FRAGMENT_DIALOG = "dialog"
-    override var TAG = "Camera2VideoFragment"
+    override var TAG = "CameraView.class"
     val REQUEST_VIDEO_PERMISSIONS = 1
     private val SENSOR_ORIENTATION_DEFAULT_DEGREES = 90
     private val SENSOR_ORIENTATION_INVERSE_DEGREES = 270
@@ -585,7 +587,7 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
         startPreview()
         sendNewRecordEvent()
         stopListeningEvent()
-        if (activity != null) showToast("Video saved: $nextVideoAbsolutePath")
+        if (activity != null) showToast("video record saved : $nextVideoAbsolutePath")
         nextVideoAbsolutePath = null
 
         dismiss()
@@ -602,7 +604,7 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
         startPreview()
         getVideoFile(nextVideoAbsolutePath).delete()
 
-        if (activity != null) showToast("Video deleted : $nextVideoAbsolutePath")
+        if (activity != null) showToast("video record deleted : $nextVideoAbsolutePath")
         nextVideoAbsolutePath = null
     }
 
@@ -614,6 +616,7 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
             pause()
         }
         stopListeningEvent()
+        if (activity != null) showToast("video recording paused")
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -624,6 +627,7 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
             resume()
         }
         listenForMovementEvent()
+        if (activity != null) showToast("video recording resumed")
     }
 
     private fun sendNewRecordEvent() {
@@ -748,7 +752,27 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
                         }
                         showInfo()
                     },
-                    { error -> System.out.println("error is " + error) })
+                    { error -> LogUtils.d(TAG,"error is " + error) })
+        )
+        listenForAccelerationEvent()
+    }
+
+    private var prevAcc: Float = 0.0F
+
+    private fun listenForAccelerationEvent() {
+        addSubscribe(
+            RxBus.toObserverable(Event.AccelerationChangeEvent::class.java)
+                .filter { (it.value - prevAcc) > 0.1F }
+                .compose(rxSchedulerHelperForObservable())
+                .subscribe(
+                    { event ->
+                        prevAcc = event.value
+                        if (isRecordingVideo) {
+                            val value = "Acceleration : "+event.value
+                            accelerationTv.post { accelerationTv.text = value }
+                        }
+                    },
+                    { error -> LogUtils.e(TAG,"error is " + error) })
         )
     }
 

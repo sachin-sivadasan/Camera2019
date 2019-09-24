@@ -79,7 +79,7 @@ abstract class BaseMvpDialogFragment<V : BaseContract.View, P : BaseContract.Pre
     override fun onActivityCreated(savedInstanceState: android.os.Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val window = dialog?.window
-        window?.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        //window?.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         dialog?.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
         window?.attributes?.windowAnimations = R.style.DialogAnimation

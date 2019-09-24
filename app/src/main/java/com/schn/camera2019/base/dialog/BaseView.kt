@@ -2,6 +2,7 @@ package com.schn.camera2019.base.dialog
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.schn.camera2019.base.mvp.BaseContract
 import com.schn.camera2019.base.mvp.MvpDelegates
@@ -45,8 +46,12 @@ abstract class BaseView<V : BaseContract.View, P : BaseContract.Presenter<V>> :
         getMvpPresenter().detachView()
     }
 
-    override fun showToast(message: Int) {}
+    override fun showToast(message: Int) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
 
-    override fun showToast(message: String) {}
+    override fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
 
 }

@@ -19,4 +19,6 @@
     </string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="error_in_reading_files">Error In Reading File</string>
+    <string name="open_camera">Open Camera</string>
+    <string name="open_settings">Open Settings</string>
 </resources>

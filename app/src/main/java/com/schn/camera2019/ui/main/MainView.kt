@@ -32,6 +32,10 @@ import com.schn.camera2019.rx.RxBus
 import com.schn.camera2019.ui.camera.CameraView
 import com.schn.camera2019.ui.camera.DialogListener
 import com.schn.camera2019.ui.gallery.GalleryView
+import com.schn.camera2019.ui.settings.SettingsView
+import com.schn.camera2019.util.ConstantUtil
+import com.schn.camera2019.util.LogUtils
+import com.schn.camera2019.util.PreferenceUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), MainContract.View,
@@ -44,7 +48,7 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
     override fun findMvpView(): MainContract.View {
         return this
     }
-
+    var TAG: String = "MainView.class"
     private var mAccelCurrent: Float = 0.0F
     private var mAccelLast: Float = 0.0F
     private var mAccel: Float = 0.0F
@@ -56,7 +60,7 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
     private var permissionFromSettings = false
 
     override fun showRationale(actionCode: Int) {
-        System.out.println("show rationale message")
+        LogUtils.d(TAG,"show rationale message")
         createAndShowPermissionRationale(
             actionCode,
             R.string.rationale_title,
@@ -73,6 +77,10 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
         val videoRecordIv = toolbar.findViewById<ImageView>(R.id.record)
         videoRecordIv.setOnClickListener {
             showCamera()
+        }
+        val settingsIv = toolbar.findViewById<ImageView>(R.id.settings)
+        settingsIv.setOnClickListener {
+            showSettings()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //checking permissions
@@ -92,13 +100,13 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
     }
 
     override fun permissionAccepted(actionCode: Int) {
-        System.out.println("permission granted")
+        LogUtils.d(TAG,"permission granted")
         showGalleyFragment()
     }
 
     private fun showGalleyFragment() {
-        System.out.println("showing galley fragment")
-        if(supportFragmentManager.findFragmentByTag("tag.gallery") == null) {
+        LogUtils.d(TAG,"showing galley fragment")
+        if (supportFragmentManager.findFragmentByTag("tag.gallery") == null) {
             val beginTransaction = supportFragmentManager.beginTransaction()
             beginTransaction.replace(R.id.fragment_container, GalleryView(), "tag.gallery")
             beginTransaction.addToBackStack("tag.gallery")
@@ -107,13 +115,13 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
     }
 
     override fun permissionDenied(actionCode: Int) {
-        System.out.println("permission denied")
+        LogUtils.d(TAG,"permission denied")
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Action.ACTION_USE_CAMERA.getPermission())
             || ActivityCompat.shouldShowRequestPermissionRationale(this, Action.ACTION_USE_MIC.getPermission())
             || ActivityCompat.shouldShowRequestPermissionRationale(this, Action.ACTION_WRITE_SDCARD.getPermission())
         ) {
             if (dismissPermissionRationale() == 0) {
-                System.out.println("showing rationale view")
+                LogUtils.d(TAG,"showing rationale view")
                 createAndShowPermissionRationale(
                     actionCode,
                     R.string.rationale_title,
@@ -121,9 +129,17 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
                 )
             }
         } else {
-            System.out.println("showing snack bar message")
+            LogUtils.d(TAG,"showing snack bar message")
             showSnackBarPermissionMessage(R.string.snack_bar_permission)
         }
+    }
+
+    private fun showSettings() {
+
+        val cameraView = SettingsView()
+
+        cameraView.show(supportFragmentManager, "camera")
+
     }
 
     private fun showCamera() {
@@ -165,33 +181,41 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
     }
 
     private fun getAccelerometer(event: SensorEvent) {
+        val threshold = PreferenceUtil.getString(ConstantUtil.EXTRA_KEY_THRESHOLD, "0.5")
+        // value for checking the violation
+        val thresholdDouble = threshold.toDouble()
+
         val values = event.values
         val actualTime = event.timestamp
         val x: Float = values[0]
         val y: Float = values[1]
         val z: Float = values[2]
-        System.out.println("-----------------")
-        System.out.println("x $x y $y z $z")
+        LogUtils.d(TAG,"-----------------")
+        LogUtils.d(TAG,"x $x y $y z $z")
         mAccelLast = mAccelCurrent
         mAccelCurrent = Math.sqrt(((x * x) + (y * y) + (z * z)).toDouble()).toFloat()
         val delta: Float = mAccelCurrent - mAccelLast
         mAccel = (mAccel * 0.9f) + delta
-        System.out.println("acceleration current $mAccelCurrent")
-        System.out.println("acceleration previous $mAccelLast")
-        System.out.println("acceleration delta $delta")
-        System.out.println("acceleration $mAccel")
-        if (mAccel >= 1.0) {
-            System.out.println("movement detected")
+        LogUtils.d(TAG,"acceleration current $mAccelCurrent")
+        LogUtils.d(TAG,"acceleration previous $mAccelLast")
+        LogUtils.d(TAG,"acceleration delta $delta")
+        LogUtils.d(TAG,"acceleration $mAccel")
+        LogUtils.d(TAG,"threshold value $thresholdDouble")
+        if (mAccel >= thresholdDouble) {
+            LogUtils.d(TAG,"movement detected")
             lastUpdate = actualTime
             RxBus.post(Event.AccelerationEvent())
         }
-        System.out.println("-----------------")
+        val changeEvent = Event.AccelerationChangeEvent()
+        changeEvent.value = mAccel
+        RxBus.post(changeEvent)
+        LogUtils.d(TAG,"-----------------")
     }
 
     override fun onResume() {
         super.onResume()
-        if(permissionFromSettings){
-            permissionFromSettings =false
+        if (permissionFromSettings) {
+            permissionFromSettings = false
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 //checking permissions
                 checkPermissions()
@@ -244,14 +268,14 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
      * Retry permission check.
      */
     fun onAcceptRationaleClick(view: View) {
-        System.out.println(view)
+        LogUtils.d(TAG,view)
         val action = dismissPermissionRationale()
-        System.out.println("action$action")
+        LogUtils.d(TAG,"action$action")
         checkPermissions()
     }
 
     fun onDismissRationaleClick(view: View) {
-        System.out.println(view)
+        LogUtils.d(TAG,view)
         dismissPermissionRationale()
         finish()
     }
@@ -268,4 +292,11 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
         return 0
     }
 
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount == 1) {
+            finish()
+        } else {
+            super.onBackPressed()
+        }
+    }
 }

@@ -37,6 +37,7 @@ class SplashView : BaseMvpActivity<SplashContract.View, SplashContract.Presenter
         } else {
             false
         }
+
     }
 
     private val mHideHandler = Handler()
