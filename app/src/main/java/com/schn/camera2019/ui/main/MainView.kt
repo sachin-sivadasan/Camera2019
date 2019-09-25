@@ -181,7 +181,7 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
     }
 
     private fun getAccelerometer(event: SensorEvent) {
-        val threshold = PreferenceUtil.getString(ConstantUtil.EXTRA_KEY_THRESHOLD, "0.5")
+        val threshold = PreferenceUtil.getString(ConstantUtil.EXTRA_KEY_THRESHOLD, ConstantUtil.DEFAULT_THRESHOLD)
         // value for checking the violation
         val thresholdDouble = threshold.toDouble()
 

@@ -570,6 +570,7 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
                         captureSession = cameraCaptureSession
                         updatePreview()
                         activity?.runOnUiThread {
+                            showToast("Recording started")
                             videoButton.setText(R.string.stop)
                             isRecordingVideo = true
                             mediaRecorder?.start()
@@ -625,7 +626,7 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
 
         clearTextView()
         stopListeningEvent()
-        if (activity != null) showToast("video record stopped and deleted : $nextVideoAbsolutePath")
+        if (activity != null) showToast("video record stopped and deleted ")
         nextVideoAbsolutePath = null
     }
 

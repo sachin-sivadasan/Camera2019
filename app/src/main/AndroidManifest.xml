@@ -14,7 +14,8 @@
                  android:supportsRtl="true"
                  android:name=".app.App"
                  android:theme="@style/AppTheme">
-        <activity android:name=".ui.splash.SplashView">
+        <activity android:name=".ui.splash.SplashView"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>
@@ -22,7 +23,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.main.MainView">
+        <activity android:name=".ui.main.MainView"
+        android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>

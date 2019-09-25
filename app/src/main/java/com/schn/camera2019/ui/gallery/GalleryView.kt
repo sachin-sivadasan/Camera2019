@@ -27,6 +27,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.io.File
+import android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+import com.schn.camera2019.ui.gallery.list.SingleClick
+import com.schn.camera2019.ui.player.VideoPlayView
 
 class GalleryView : BaseRecyclerFragment<FrameLayout, VideoItemModel, GalleryContract.View, GalleryContract.Presenter>(),
     GalleryContract.View {
@@ -131,22 +135,31 @@ class GalleryView : BaseRecyclerFragment<FrameLayout, VideoItemModel, GalleryCon
             val item = get(position)
             holder.let {
                 val textView = it.convertView as VideoItemView
-                textView.setOnClickListener { playVideo(item) }
+                textView.setOnClickListener(object : SingleClick() {
+                    override fun onSingleClick(view: View) {
+                        playVideo(item)
+                    }
+                })
                 textView.setModel(item)
             }
         }
     }
 
     private fun playVideo(item: VideoItemModel) {
-        val i = Intent(Intent.ACTION_VIEW)
+        //val i = Intent(Intent.ACTION_VIEW)
+        val i = Intent(Intent.ACTION_VIEW, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
         val mediaFile = File(item.mFile)
         val authority = App.context().applicationContext.packageName + ".provider"
         val videoUri = FileProvider.getUriForFile(App.context(), authority, mediaFile)
         i.setDataAndType(videoUri, "video/*")
-        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        i.flags = FLAG_GRANT_READ_URI_PERMISSION or FLAG_GRANT_WRITE_URI_PERMISSION
         val componentName = i.resolveActivity(App.context().packageManager)
         if (componentName != null) {
-            this.startActivity(i)
+            //this.startActivity(i)
+            VideoPlayView.newInstance(mediaFile.absolutePath).show(childFragmentManager, "player")
+        }else{
+            showToast("Failed to play video")
+            VideoPlayView.newInstance(mediaFile.absolutePath).show(childFragmentManager, "player")
         }
     }
 

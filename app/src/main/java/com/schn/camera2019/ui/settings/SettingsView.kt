@@ -54,7 +54,7 @@ class SettingsView : BaseMvpDialogFragment<SettingsContract.View, SettingsContra
             }
         })
 
-        val default = PreferenceUtil.getString(ConstantUtil.EXTRA_KEY_THRESHOLD, "0.5")
+        val default = PreferenceUtil.getString(ConstantUtil.EXTRA_KEY_THRESHOLD, ConstantUtil.DEFAULT_THRESHOLD)
         LogUtils.d(TAG,"default threshold $default")
         val defaultDouble = default.toDouble()
         val progress = ((defaultDouble / 0.5) - min).toInt()
