@@ -5,8 +5,6 @@ import android.content.Context
 import com.schn.camera2019.util.LogUtils
 import androidx.multidex.MultiDex
 
-
-
 class App : Application() {
     companion object {
         lateinit var instance: App
