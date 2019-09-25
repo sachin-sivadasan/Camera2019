@@ -39,6 +39,7 @@ class VideoItemView : FrameLayout {
         val mThumbIv = mThumbIv ?: return
         Glide.with(context)
             .load(model.mFile)
+            .placeholder(R.drawable.dummy_image)
             .centerCrop()
             .into(mThumbIv)
     }

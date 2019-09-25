@@ -47,11 +47,15 @@ abstract class BaseView<V : BaseContract.View, P : BaseContract.Presenter<V>> :
     }
 
     override fun showToast(message: Int) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        val activity = activity
+        if(activity != null)
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        val activity = activity
+        if(activity != null)
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
 }

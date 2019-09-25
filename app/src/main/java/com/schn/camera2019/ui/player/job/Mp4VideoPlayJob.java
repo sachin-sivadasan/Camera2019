@@ -13,6 +13,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.schn.camera2019.R;
+import com.schn.camera2019.util.ConstantUtil;
 
 public final class Mp4VideoPlayJob implements VideoPlayJob, PlaybackPreparer {
 
@@ -49,12 +50,12 @@ public final class Mp4VideoPlayJob implements VideoPlayJob, PlaybackPreparer {
                 if (getListener() != null) {
                     getListener().onError();
                 }
-                clearStartPosition();
-                boolean haveStartPosition = startWindow != C.INDEX_UNSET;
-                if (haveStartPosition) {
-                    player.seekTo(startWindow, startPosition);
-                }
-                player.prepare(mediaSource, !haveStartPosition, false);
+//                clearStartPosition();
+//                boolean haveStartPosition = startWindow != C.INDEX_UNSET;
+//                if (haveStartPosition) {
+//                    player.seekTo(startWindow, startPosition);
+//                }
+//                player.prepare(mediaSource, !haveStartPosition, false);
             }
         });
         player.setRepeatMode(Player.REPEAT_MODE_OFF);
@@ -73,7 +74,7 @@ public final class Mp4VideoPlayJob implements VideoPlayJob, PlaybackPreparer {
     @NonNull
     @Override
     public VideoPlayJob playResource(@NonNull Bundle args) {
-        String contentUrl = args.getString("FILE_PATH_KEY");
+        String contentUrl = args.getString(ConstantUtil.EXTRA_KEY_PATH);
         mediaSource = buildMediaSource(Uri.parse(contentUrl));
         player.seekTo(contentPosition);
         player.prepare(mediaSource);

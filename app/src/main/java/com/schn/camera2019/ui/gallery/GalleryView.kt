@@ -2,6 +2,8 @@ package com.schn.camera2019.ui.gallery
 
 import android.app.Activity
 import android.content.Intent
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+import android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -19,18 +21,16 @@ import com.schn.camera2019.base.recycler.view.BaseRecyclerFragment
 import com.schn.camera2019.permission.EasyPermission
 import com.schn.camera2019.rx.Event
 import com.schn.camera2019.rx.RxBus
+import com.schn.camera2019.ui.gallery.list.SingleClick
 import com.schn.camera2019.ui.gallery.list.VideoItemModel
 import com.schn.camera2019.ui.gallery.list.VideoItemView
 import com.schn.camera2019.ui.main.MainView
+import com.schn.camera2019.ui.player.VideoPlayView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.io.File
-import android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
-import com.schn.camera2019.ui.gallery.list.SingleClick
-import com.schn.camera2019.ui.player.VideoPlayView
 
 class GalleryView : BaseRecyclerFragment<FrameLayout, VideoItemModel, GalleryContract.View, GalleryContract.Presenter>(),
     GalleryContract.View {
@@ -158,7 +158,6 @@ class GalleryView : BaseRecyclerFragment<FrameLayout, VideoItemModel, GalleryCon
             //this.startActivity(i)
             VideoPlayView.newInstance(mediaFile.absolutePath).show(childFragmentManager, "player")
         }else{
-            showToast("Failed to play video")
             VideoPlayView.newInstance(mediaFile.absolutePath).show(childFragmentManager, "player")
         }
     }

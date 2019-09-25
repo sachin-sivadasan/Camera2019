@@ -3,12 +3,12 @@ package com.schn.camera2019.ui.player
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import com.google.android.exoplayer2.ui.PlayerView
 import com.schn.camera2019.R
 import com.schn.camera2019.base.dialog.BaseMvpDialogFragment
 import com.schn.camera2019.ui.player.job.Mp4VideoPlayJob
 import com.schn.camera2019.ui.player.job.VideoPlayJob
+import com.schn.camera2019.util.ConstantUtil
 
 class VideoPlayView : BaseMvpDialogFragment<VideoPlayContract.View, VideoPlayContract.Presenter>(),
     VideoPlayContract.View,
@@ -53,7 +53,7 @@ class VideoPlayView : BaseMvpDialogFragment<VideoPlayContract.View, VideoPlayCon
 
     private var mPlayerView: PlayerView? = null
 
-    private lateinit var mVideoPlayJob: Mp4VideoPlayJob
+    private var mVideoPlayJob: Mp4VideoPlayJob? = null
 
     private var progressView: LinearLayout? = null
 
@@ -63,10 +63,20 @@ class VideoPlayView : BaseMvpDialogFragment<VideoPlayContract.View, VideoPlayCon
         this.mPlayerView = view.findViewById<PlayerView>(R.id.player_view)
         this.progressView = view.findViewById(R.id.loadingView)
         mVideoPlayJob = Mp4VideoPlayJob(view.context)
-        mVideoPlayJob.init(mPlayerView, this)
+        mVideoPlayJob?.init(mPlayerView, this)
         val bundle = Bundle()
-        bundle.putString("FILE_PATH_KEY", filePath)
-        mVideoPlayJob.playResource(bundle)
+        bundle.putString(ConstantUtil.EXTRA_KEY_PATH, filePath)
+        mVideoPlayJob?.playResource(bundle)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mVideoPlayJob?.reset()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mVideoPlayJob?.release()
     }
 
 }
