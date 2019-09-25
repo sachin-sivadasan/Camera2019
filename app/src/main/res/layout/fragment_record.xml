@@ -29,5 +29,6 @@
             android:gravity="center"
             android:textColor="@color/colorBlack"
             tools:text="No videos found"
+            android:textSize="24sp"
             android:layout_height="40dp"/>
 </FrameLayout>

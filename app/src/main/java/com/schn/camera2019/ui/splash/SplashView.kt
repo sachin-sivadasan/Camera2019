@@ -1,14 +1,13 @@
-package com.reddit.recipe.ui.splash
+package com.schn.camera2019.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import com.schn.camera2019.BuildConfig
 import com.schn.camera2019.R
 import com.schn.camera2019.base.acitivity.BaseMvpActivity
 import com.schn.camera2019.ui.main.MainView
-import com.schn.camera2019.ui.splash.SplashContract
-import com.schn.camera2019.ui.splash.SplashPresenter
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 
 /**
@@ -71,6 +70,8 @@ class SplashView : BaseMvpActivity<SplashContract.View, SplashContract.Presenter
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.hide()
         mVisible = true
+        val version = "Version ${BuildConfig.VERSION_NAME}"
+        versionTv.text = version
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

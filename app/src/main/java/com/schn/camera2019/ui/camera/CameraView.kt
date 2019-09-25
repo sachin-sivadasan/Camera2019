@@ -43,6 +43,7 @@ import kotlinx.android.synthetic.main.fragment_camera.*
 import java.io.File
 import java.io.IOException
 import java.lang.Long
+import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
@@ -228,9 +229,14 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
         super.onPause()
     }
 
+    override fun onStop() {
+        super.onStop()
+    }
+
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.video -> if (isRecordingVideo) {
+                /*As of now pause/resume is disabled*/
                 //stopRecordingVideo()
                 if (isRecordingPause) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -283,10 +289,19 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
      * Requests permissions needed for recording video.
      */
     private fun requestVideoPermissions() {
-        if (shouldShowRequestPermissionRationale(arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))) {
+        if (shouldShowRequestPermissionRationale(
+                arrayOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO
+                )
+            )
+        ) {
 
         } else {
-            requestPermissions(arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO), REQUEST_VIDEO_PERMISSIONS)
+            requestPermissions(
+                arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO),
+                REQUEST_VIDEO_PERMISSIONS
+            )
         }
     }
 
@@ -299,12 +314,14 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
             if (grantResults.size == arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO).size) {
                 for (result in grantResults) {
                     if (result != PERMISSION_GRANTED) {
-                        ErrorDialog.newInstance(getString(R.string.request_permission)).show(childFragmentManager, FRAGMENT_DIALOG)
+                        ErrorDialog.newInstance(getString(R.string.request_permission))
+                            .show(childFragmentManager, FRAGMENT_DIALOG)
                         break
                     }
                 }
             } else {
-                ErrorDialog.newInstance(getString(R.string.request_permission)).show(childFragmentManager, FRAGMENT_DIALOG)
+                ErrorDialog.newInstance(getString(R.string.request_permission))
+                    .show(childFragmentManager, FRAGMENT_DIALOG)
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -381,6 +398,8 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
             cameraDevice = null
             mediaRecorder?.release()
             mediaRecorder = null
+            isRecordingVideo = false
+            videoButton.setText(R.string.record)
         } catch (e: InterruptedException) {
             throw RuntimeException("Interrupted while trying to lock camera closing.", e)
         } finally {
@@ -604,10 +623,18 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
         startPreview()
         getVideoFile(nextVideoAbsolutePath).delete()
 
-        if (activity != null) showToast("video record deleted : $nextVideoAbsolutePath")
+        clearTextView()
+        stopListeningEvent()
+        if (activity != null) showToast("video record stopped and deleted : $nextVideoAbsolutePath")
         nextVideoAbsolutePath = null
     }
 
+    private fun clearTextView() {
+        val value = ""
+        accelerationTv.post { accelerationTv.text = value }
+    }
+
+    /*As of now pause/resume is disabled*/
     @RequiresApi(Build.VERSION_CODES.N)
     private fun pauseRecordingVideo() {
         isRecordingPause = true
@@ -615,6 +642,7 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
         mediaRecorder?.apply {
             pause()
         }
+        clearTextView()
         stopListeningEvent()
         if (activity != null) showToast("video recording paused")
     }
@@ -737,7 +765,9 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
         }
     }
 
+    /*listener for getting notification if it reaches the threshold value*/
     private fun listenForMovementEvent() {
+        prevAcc = 0.0F
         addSubscribe(
             RxBus.toObserverable(Event.AccelerationEvent::class.java)
                 .compose(rxSchedulerHelperForObservable())
@@ -745,34 +775,41 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
                     { event ->
                         if (isRecordingVideo) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                pauseRecordingVideo()
+                                /*As of now pause/resume is disabled*/
+                                //pauseRecordingVideo()
+                                stopRecordingVideoAndWait()
                             } else {
                                 stopRecordingVideoAndWait()
                             }
                         }
                         showInfo()
                     },
-                    { error -> LogUtils.d(TAG,"error is " + error) })
+                    { error -> LogUtils.d(TAG, "error is " + error) })
         )
         listenForAccelerationEvent()
     }
 
     private var prevAcc: Float = 0.0F
 
+    /*listener for getting acceleration value notification*/
     private fun listenForAccelerationEvent() {
         addSubscribe(
             RxBus.toObserverable(Event.AccelerationChangeEvent::class.java)
-                .filter { (it.value - prevAcc) > 0.1F }
+                .filter { (it.value - prevAcc) > 0.05F || (it.value - prevAcc) < -0.05F }
                 .compose(rxSchedulerHelperForObservable())
                 .subscribe(
                     { event ->
                         prevAcc = event.value
                         if (isRecordingVideo) {
-                            val value = "Acceleration : "+event.value
+                            val df = DecimalFormat("#.##");
+                            System.out.println(df.format(event.value))
+                            val value = "" + df.format(event.value)
                             accelerationTv.post { accelerationTv.text = value }
+                        } else {
+                            clearTextView()
                         }
                     },
-                    { error -> LogUtils.e(TAG,"error is " + error) })
+                    { error -> LogUtils.e(TAG, "error is " + error) })
         )
     }
 
@@ -799,8 +836,8 @@ class CameraView : BaseMvpDialogFragment<CameraContract.View, CameraContract.Pre
         (activity as DialogListener).onDismis()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         unSubscribe()
         mCompositeDisposable?.dispose()
     }

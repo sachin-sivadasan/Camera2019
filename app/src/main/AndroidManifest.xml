@@ -14,7 +14,7 @@
                  android:supportsRtl="true"
                  android:name=".app.App"
                  android:theme="@style/AppTheme">
-        <activity android:name="com.reddit.recipe.ui.splash.SplashView">
+        <activity android:name=".ui.splash.SplashView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>

@@ -19,21 +19,67 @@
             android:background="#4285f4">
 
         <Button
-                android:id="@+id/video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:text=""/>
+
+        <!--<TextView-->
+                <!--android:id="@+id/accelerationLabel"-->
+                <!--android:layout_below="@id/video"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:text="Acceleration : "-->
+                <!--android:textColor="@color/colorWhite"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:gravity="center"-->
+                <!--android:layout_height="50dp"/>-->
+        <!--<TextView-->
+                <!--android:id="@+id/accelerationTv"-->
+                <!--android:layout_toRightOf="@id/accelerationLabel"-->
+                <!--android:layout_below="@id/video"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--tools:text="20"-->
+                <!--android:textColor="@color/colorWhite"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:gravity="center"-->
+                <!--android:layout_height="50dp"/>-->
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:background="#4285f4">
+
+        <Button
+                android:id="@+id/video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
                 android:text="@string/record"/>
 
         <TextView
-                android:id="@+id/accelerationTv"
+                android:id="@+id/accelerationLabel"
                 android:layout_below="@id/video"
-                android:layout_width="match_parent"
-                tools:text="Acceleration : 20"
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Acceleration : "
+                android:textColor="@color/colorWhite"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:layout_height="50dp"/>
+        <TextView
+                android:id="@+id/accelerationTv"
+                android:layout_toRightOf="@id/accelerationLabel"
+                android:layout_below="@id/video"
+                android:layout_width="wrap_content"
+                tools:text="20"
                 android:textColor="@color/colorWhite"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:layout_height="50dp"/>
     </RelativeLayout>
-
 </RelativeLayout>

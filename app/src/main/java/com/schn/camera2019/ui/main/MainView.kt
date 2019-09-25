@@ -223,6 +223,9 @@ class MainView : BaseMvpActivity<MainContract.View, MainContract.Presenter>(), M
                 showGalleyFragment()
             }
         }
+        if(supportFragmentManager.findFragmentByTag("camera") != null){
+            sensorManager?.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        }
     }
 
     override fun onPause() {
