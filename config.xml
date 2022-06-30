@@ -48,6 +48,7 @@
             <sparkle:version>10.0</sparkle:version>
             <sparkle:maximumSystemVersion>2.0.0</sparkle:maximumSystemVersion>
             <enclosure url="www.google.com" sparkle:version="10.0" />
+            <sparkle:tags> <sparkle:criticalUpdate /> </sparkle:tags>
         </item>
     </channel>
 </rss>
