@@ -47,7 +47,7 @@
             <title>Version 10.0</title>
             <sparkle:version>10.0</sparkle:version>
             <sparkle:maximumSystemVersion>2.0.0</sparkle:maximumSystemVersion>
-            <enclosure url="https://play.google.com/store/apps/details?id=io.zoko.agentapp" sparkle:version="10.0" />
+            <enclosure url="https://play.google.com/store/apps/details?id=io.zoko.agentapp" sparkle:version="10.0" sparkle:os="iOS"/>
             <sparkle:tags> <sparkle:criticalUpdate /> </sparkle:tags>
         </item>
     </channel>
